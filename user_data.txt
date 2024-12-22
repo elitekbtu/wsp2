@@ -1,5 +1,4 @@
-techsupport:techsupport
-student1:student1
-Teacher:teacher
-Admin:admin
-Manager:manager
+tech:support:TechSupportSpecialist
+Admin:admin:Admin
+Manager:manager:Manager
+beknur:beka:Student

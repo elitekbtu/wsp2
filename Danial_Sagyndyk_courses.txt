@@ -1,0 +1,4 @@
+[CSC1103] Programming Principles 1 (6 ECTS)
+[CSCI1102] Discrete Structures (5 ECTS)
+[CSCI1204] Programming Principles 2 (6 ECTS)
+[CSCI2105] Algorithms and Data Structures (5 ECTS)

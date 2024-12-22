@@ -17,10 +17,14 @@ public class UsersList {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Метод запускает процесс регистрации и спрашивает, какого типа пользователь.
+     * В зависимости от выбора – вызывает соответствующий метод.
+     */
     public void register() {
         System.out.println("Добро пожаловать в регистрацию");
         System.out.println("Выберите опцию: ");
-        System.out.println("1. Student         2. Teacher        3. Admin\n4. TechSupport         5. Manager");
+        System.out.println("1. Student         2. Teacher        3. Admin\n4. TechSupport     5. Manager");
 
         int choice = scanner.nextInt();
         scanner.nextLine(); // Очистка буфера
@@ -92,7 +96,7 @@ public class UsersList {
     }
 
     private void registerTechSupport() {
-        System.out.println("Введите ID сотрудника технической поддержки:");
+        System.out.println("Введите ID сотрудника техподдержки:");
         String id = scanner.nextLine();
         System.out.println("Введите полное имя сотрудника:");
         String fullname = scanner.nextLine();
@@ -121,39 +125,49 @@ public class UsersList {
         System.out.println("Менеджер зарегистрирован успешно!");
     }
 
+    /**
+     * Сохранение данных пользователя в виде файла: users/UsersData/ТипПользователя/ID.txt
+     */
     private void saveUserData(User user) {
-        String userType = user.getClass().getSimpleName(); // Get the user type (e.g., "Student", "Teacher")
-        String directoryPath = "users/UsersData/" + userType; // Create path based on user type
+        String userType = user.getClass().getSimpleName(); // напр. "UndergraduateStudent", "Teacher" и т.д.
+        String directoryPath = "users/UsersData/" + userType; // Папка = имя класса
         File directory = new File(directoryPath);
 
-        // Check and create the directory if it doesn't exist
+        // Создаём папку, если не существует
         if (!directory.exists()) {
             if (directory.mkdirs()) {
                 System.out.println("Directory " + directoryPath + " created successfully.");
             } else {
                 System.out.println("Failed to create directory " + directoryPath);
-                return; // If the directory cannot be created, exit the method
+                return;
             }
         }
 
-        String fileName = directoryPath + "/" + user.getId() + ".txt"; // Full path to the file
+        // Формируем файл вида: users/UsersData/Teacher/123.txt
+        String fileName = directoryPath + "/" + user.getId() + ".txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(user.getId() + ":" + user.getPassword()); // Save login and password
+            // Запишем логин и пароль (ID:password)
+            writer.write(user.getId() + ":" + user.getPassword());
             writer.newLine();
             writer.write("Fullname: " + user.getFullname());
             writer.newLine();
             writer.write("Email: " + user.getEmail());
-            System.out.println("User  data saved in file: " + fileName);
+            System.out.println("User data saved in file: " + fileName);
         } catch (IOException e) {
             System.out.println("Error writing file: " + e.getMessage());
         }
     }
+
+    /**
+     * Загрузка данных пользователя из локального файла
+     * На вход: ID + Тип
+     */
     public void loadUserData() {
         System.out.println("Введите ID: ");
         String id = scanner.nextLine();
 
         System.out.println("Выбери свой тип: ");
-        System.out.println("1. Student         2. Teacher        3. Admin\n4. TechSupport         5. Manager");
+        System.out.println("1. Student         2. Teacher        3. Admin\n4. TechSupport     5. Manager");
 
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -162,6 +176,8 @@ public class UsersList {
 
         switch (choice) {
             case 1:
+                // Для студентов мы по умолчанию сохранили как UndergraduateStudent
+                // поэтому ищем файл в папке UndergraduateStudent
                 file = new File("users/UsersData/UndergraduateStudent/" + id + ".txt");
                 break;
             case 2:
@@ -200,5 +216,4 @@ public class UsersList {
             System.out.println("Ошибка при чтении файла: " + e.getMessage());
         }
     }
-
 }
