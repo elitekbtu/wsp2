@@ -1,8 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Random;
+import java.util.*;
 
 // Подключаем ваши классы:
 import news.NewsList;
@@ -28,7 +25,7 @@ public class Tester {
         while (true) {
             System.out.println("\nВыберите действие: 1 - Регистрация, 2 - Вход, 0 - Выход");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // очистка буфера
+            scanner.nextLine(); // Очистка буфера
 
             switch (choice) {
                 case 1:
@@ -36,8 +33,7 @@ public class Tester {
                     break;
                 case 2:
                     if (loginUser()) {
-                        // Если логин успешен, в loginUser() будет вызван mainMenu(...),
-                        // и пользователь выйдет оттуда, когда выберет "Выйти".
+                        // Если логин успешен, переходим в mainMenu(...).
                     }
                     break;
                 case 0:
@@ -51,8 +47,7 @@ public class Tester {
     }
 
     /**
-     * Загрузка данных из файла user_data.txt
-     * Каждая строка формата: "login:password:type"
+     * Загружаем логины, пароли и типы пользователей из user_data.txt
      */
     private static void loadUserData() {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -64,7 +59,6 @@ public class Tester {
                     String login = parts[0];
                     String password = parts[1];
                     String userType = parts[2];
-                    // В HashMap положим: login -> "password:userType"
                     userDatabase.put(login, password + ":" + userType);
                 }
             }
@@ -77,19 +71,16 @@ public class Tester {
     }
 
     /**
-     * Сохранение данных в файл user_data.txt
-     * Перезаписываем файл заново всем содержимым из userDatabase
+     * Сохраняем userDatabase в user_data.txt
      */
     private static void saveUserData() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             for (String login : userDatabase.keySet()) {
-                // Достаём "пароль:тип"
                 String passAndType = userDatabase.get(login);
                 String[] parts = passAndType.split(":");
                 if (parts.length == 2) {
                     String password = parts[0];
                     String userType = parts[1];
-                    // Пишем в файл: login:password:type
                     writer.write(login + ":" + password + ":" + userType);
                     writer.newLine();
                 }
@@ -101,7 +92,7 @@ public class Tester {
     }
 
     /**
-     * Регистрация нового пользователя
+     * Регистрация: логин, пароль, тип пользователя + вызов UsersList для подробной регистрации
      */
     private static void registerUser() {
         System.out.println("Введите логин:");
@@ -113,7 +104,7 @@ public class Tester {
             System.out.println("Введите пароль:");
             String registerPassword = scanner.nextLine();
 
-            // Выбираем тип пользователя
+            // Тип
             System.out.println("Выберите тип пользователя:");
             System.out.println("1 - Student");
             System.out.println("2 - Teacher");
@@ -121,7 +112,7 @@ public class Tester {
             System.out.println("4 - Admin");
             System.out.println("5 - TechSupportSpecialist");
             int typeChoice = scanner.nextInt();
-            scanner.nextLine(); // очистка буфера
+            scanner.nextLine(); // Очистка буфера
 
             String userType;
             switch (typeChoice) {
@@ -145,11 +136,11 @@ public class Tester {
                     userType = "Student";
             }
 
-            // Сохраняем логин-> "пароль:тип"
+            // Сохраняем в userDatabase
             userDatabase.put(registerLogin, registerPassword + ":" + userType);
-            saveUserData(); // Записываем в файл
+            saveUserData();
 
-            // Дополнительно вызываем UsersList для записи более подробных данных (ID, fullname, email).
+            // Вызываем UsersList для сохранения файлов (ID, fullname, email).
             UsersList usersList = new UsersList();
             usersList.register();
 
@@ -174,7 +165,6 @@ public class Tester {
                 String userType = parts[1];
                 if (storedPassword.equals(password)) {
                     System.out.println("Вход выполнен успешно! Добро пожаловать, " + login + "!");
-                    // Переходим в меню
                     mainMenu(userType);
                     return true;
                 }
@@ -186,19 +176,19 @@ public class Tester {
     }
 
     /**
-     * Главное меню с учётом типа пользователя
+     * Главное меню в зависимости от userType
      */
     private static void mainMenu(String userType) {
         while (true) {
             System.out.println("\nГлавное меню:");
             System.out.println("1 - Новостная лента");
             System.out.println("2 - Данные пользователя");
-            System.out.println("3 - Транскрипт (заглушка)");
+            System.out.println("3 - Сформировать и прочитать транскрипт");
             System.out.println("4 - Курсы");
             System.out.println("5 - Техническая поддержка");
             System.out.println("6 - Выйти");
 
-            // Добавляем пункт 7, если это Teacher / Manager / Admin / TechSupport
+            // Специальный пункт (7) для определённых ролей
             if ("Teacher".equalsIgnoreCase(userType)) {
                 System.out.println("7 - Поставить оценку студенту");
             } else if ("Manager".equalsIgnoreCase(userType)) {
@@ -209,7 +199,7 @@ public class Tester {
                 System.out.println("7 - Решить проблему пользователя");
             }
 
-            int choice = -1;
+            int choice;
             try {
                 choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
@@ -225,21 +215,22 @@ public class Tester {
                     userData();
                     break;
                 case 3:
-                    transcript();
+                    System.out.println("Введите имя пользователя (логин), для кого формируем транскрипт:");
+                    String studentName = scanner.nextLine();
+                    transcript(studentName);
                     break;
                 case 4:
                     System.out.println("Введите имя пользователя (логин) для сохранения курсов:");
-                    String username = scanner.nextLine();
-                    registerForCourses(username);
+                    String usernameForCourses = scanner.nextLine();
+                    registerForCourses(usernameForCourses);
                     break;
                 case 5:
                     technicalSupport();
                     break;
                 case 6:
                     System.out.println("Выход из меню.");
-                    return; // Возвращаемся в метод main
+                    return; // Выходим в main
                 case 7:
-                    // Уникальный пункт меню в зависимости от роли
                     if ("Teacher".equalsIgnoreCase(userType)) {
                         setGradeMenu();
                     } else if ("Manager".equalsIgnoreCase(userType)) {
@@ -266,18 +257,76 @@ public class Tester {
         String studentId = scanner.nextLine();
         System.out.println("Введите оценку:");
         String grade = scanner.nextLine();
-        // Логика сохранения оценки в БД или файл может быть здесь
+        // Логика сохранения оценки в БД или файл
         System.out.println("Учитель поставил студенту " + studentId + " оценку: " + grade);
     }
 
     /**
      * Управление финансами (Manager)
      */
+    /**
+     * Управление финансами (Manager)
+     * Здесь простая реализация расчёта стоимости обучения студента
+     * по сумме всех кредитов (ECTS).
+     */
     private static void financeMenu() {
         System.out.println("=== Управление финансами ===");
-        // Здесь любая логика, связанная с финансами
-        System.out.println("Функционал менеджера по финансам пока условный.");
+
+        System.out.print("Введите логин студента, для кого будем считать стоимость обучения: ");
+        String studentLogin = scanner.nextLine().trim();
+
+        // Спросим стоимость одного кредита:
+        System.out.print("Введите стоимость одного кредита (например, 5000): ");
+        double costPerCredit = 0;
+        try {
+            costPerCredit = Double.parseDouble(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Некорректная стоимость. Попробуйте снова.");
+            return;
+        }
+
+        // Пытаемся прочитать файл studentLogin_courses.txt и суммировать ECTS
+        String coursesFile = studentLogin.replaceAll("\\s+", "_") + "_courses.txt";
+        File file = new File(coursesFile);
+        if (!file.exists()) {
+            System.out.println("Файл с курсами не найден: " + coursesFile);
+            return;
+        }
+
+        // Считаем сумму кредитов
+        int totalEcts = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Пример: [CSC1103] Programming Principles 1 (6 ECTS)
+                if (line.isEmpty()) continue;
+                // Вытаскиваем количество ECTS через регулярное выражение
+                try {
+                    String ectsStr = line.replaceAll(".*\\((\\d+) ECTS\\).*", "$1");
+                    int ects = Integer.parseInt(ectsStr);
+                    totalEcts += ects;
+                } catch (NumberFormatException e) {
+                    // Если строка не подошла формату или ECTS не число — пропускаем
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла курсов: " + e.getMessage());
+            return;
+        }
+
+        // Если у студента вообще нет курсов
+        if (totalEcts == 0) {
+            System.out.println("У студента " + studentLogin + " нет курсов (ECTS = 0).");
+            return;
+        }
+
+        // Итого: cost = costPerCredit * totalEcts
+        double totalCost = costPerCredit * totalEcts;
+        System.out.println("Общее количество кредитов: " + totalEcts);
+        System.out.println("Стоимость одного кредита: " + costPerCredit);
+        System.out.println("Итоговая сумма за обучение: " + totalCost);
     }
+
 
     /**
      * Удалить пользователя (Admin)
@@ -289,7 +338,6 @@ public class Tester {
             userDatabase.remove(loginToDelete);
             saveUserData();
             System.out.println("Пользователь " + loginToDelete + " успешно удалён.");
-            // При желании можно также удалить txt-файл из папки UsersData
         } else {
             System.out.println("Пользователь с логином " + loginToDelete + " не найден.");
         }
@@ -299,7 +347,7 @@ public class Tester {
      * Решить проблему пользователя (TechSupport)
      */
     private static void solveIssueMenu() {
-        System.out.println("Введите ID запроса на техподдержку, который хотите решить:");
+        System.out.println("Введите ID запроса техподдержки, который хотите решить:");
         String ticketId = scanner.nextLine();
 
         TechSupportOrder order = TechSupportOrder.findRegistry(ticketId);
@@ -307,13 +355,11 @@ public class Tester {
             System.out.println("Запрос с таким ID не найден.");
             return;
         }
-
         if (order.isDone()) {
             System.out.println("Этот запрос уже завершён.");
             return;
         }
 
-        // Помечаем как решён
         order.setDone(true);
         order.setAccepted(false);
         order.setNew(false);
@@ -351,14 +397,95 @@ public class Tester {
     }
 
     /**
-     * Транскрипт — заглушка
+     * Сразу формируем и читаем транскрипт.
+     * 1. Берём курсы из "studentName_courses.txt".
+     * 2. Генерируем случайные оценки и GPA.
+     * 3. Записываем в "studentName_transcript.txt".
+     * 4. Сразу же читаем этот файл и выводим его содержимое в консоль.
      */
-    private static void transcript() {
-        System.out.println("=== Транскрипт пока не реализован. ===");
+    private static void transcript(String studentName) {
+        String inputFileName = studentName.replaceAll("\\s+", "_") + "_courses.txt";
+        Map<String, Integer> courses = new LinkedHashMap<>();
+
+        // 1. Считываем курсы из файла
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Пример строки: [CSC1103] Programming Principles 1 (6 ECTS)
+                if (line.isEmpty()) continue;
+
+                int credits;
+                try {
+                    String ectsStr = line.replaceAll(".*\\((\\d+) ECTS\\).*", "$1");
+                    credits = Integer.parseInt(ectsStr);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+
+                String courseName = line.split("\\(\\d+ ECTS\\)")[0].trim();
+                courses.put(courseName, credits);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Файл с курсами не найден: " + inputFileName);
+            return;
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла: " + inputFileName);
+            e.printStackTrace();
+            return;
+        }
+
+        if (courses.isEmpty()) {
+            System.out.println("Не найдено ни одного курса для " + studentName);
+            return;
+        }
+
+        // 2. Генерируем оценки, считаем GPA
+        Random random = new Random();
+        double totalCredits = 0;
+        double weightedSum = 0;
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Transcript for: ").append(studentName).append("\n");
+        sb.append("Course Grades:\n");
+
+        for (Map.Entry<String, Integer> entry : courses.entrySet()) {
+            String course = entry.getKey();
+            int credits = entry.getValue();
+
+            double grade = Math.round(random.nextDouble() * 4.0 * 100) / 100.0;
+            sb.append(String.format("%s (%d ECTS): %.2f\n", course, credits, grade));
+
+            totalCredits += credits;
+            weightedSum += (grade * credits);
+        }
+
+        double gpa = weightedSum / totalCredits;
+        sb.append(String.format("\nGPA: %.2f\n", gpa));
+
+        // 3. Записываем транскрипт
+        String transcriptFile = studentName.replaceAll("\\s+", "_") + "_transcript.txt";
+        try (FileWriter writer = new FileWriter(transcriptFile)) {
+            writer.write(sb.toString());
+        } catch (IOException e) {
+            System.out.println("Ошибка записи транскрипта.");
+            e.printStackTrace();
+            return;
+        }
+
+        // 4. Сразу же читаем файл транскрипта и выводим
+        try (BufferedReader br = new BufferedReader(new FileReader(transcriptFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка при чтении транскрипта: " + transcriptFile);
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Выбор курсов для студента
+     * Показать список доступных курсов и дать выбрать
      */
     private static void registerForCourses(String username) {
         showAvailableCourses();
@@ -367,7 +494,7 @@ public class Tester {
         String input = scanner.nextLine();
         String[] selectedIndexes = input.split(",");
 
-        Data[] courses = Data.getAvailableCourses(); // метод, возвращающий список доступных курсов
+        Data[] courses = Data.getAvailableCourses();
         ArrayList<Data> selectedCourses = new ArrayList<>();
 
         System.out.println("Вы выбрали следующие курсы:");
@@ -401,7 +528,7 @@ public class Tester {
      */
     private static void showAvailableCourses() {
         System.out.println("Доступные курсы:");
-        Data[] courses = Data.getAvailableCourses(); // статический метод, который отдаёт список
+        Data[] courses = Data.getAvailableCourses();
         for (int i = 0; i < courses.length; i++) {
             Data course = courses[i];
             System.out.printf("%d. [%s] %s (%d ECTS)%n",
@@ -413,11 +540,10 @@ public class Tester {
     }
 
     /**
-     * Сохранить выбранные курсы для пользователя
-     * Например, просто в текстовый файл "username_courses.txt"
+     * Сохранить выбранные курсы в файл username_courses.txt
      */
     private static void saveSelectedCourses(String username, Data[] selectedCourses) {
-        String fileName = username + "_courses.txt";
+        String fileName = username.replaceAll("\\s+", "_") + "_courses.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Data course : selectedCourses) {
                 writer.write(String.format("[%s] %s (%d ECTS)%n",
@@ -442,7 +568,7 @@ public class Tester {
             System.out.println("3 - Закрыть запрос");
             System.out.println("4 - Вернуться в главное меню");
 
-            int choice = -1;
+            int choice;
             try {
                 choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
@@ -484,7 +610,7 @@ public class Tester {
     }
 
     /**
-     * Просмотреть все созданные запросы
+     * Посмотреть запросы
      */
     private static void viewSupportRequests() {
         System.out.println("Ваши запросы:");
@@ -504,7 +630,7 @@ public class Tester {
     }
 
     /**
-     * Закрыть запрос (статус = Done)
+     * Закрыть запрос
      */
     private static void closeSupportRequest() {
         System.out.println("Введите ID запроса, который хотите закрыть:");
@@ -526,7 +652,7 @@ public class Tester {
     }
 
     /**
-     * Получить строковое описание статуса
+     * Удобное описание статуса
      */
     private static String getOrderStatus(TechSupportOrder order) {
         if (order.isDone()) return "Завершён";
