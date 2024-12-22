@@ -11,23 +11,42 @@ import java.io.*;
 import java.util.Scanner;
 
 public class UsersList {
-    private Scanner scanner;
 
-    public UsersList() {
+    private Scanner scanner;
+    private boolean isRussian;
+
+    /**
+     * Конструктор, принимающий флаг языка (true = русский, false = английский).
+     */
+    public UsersList(boolean isRussian) {
         this.scanner = new Scanner(System.in);
+        this.isRussian = isRussian;
     }
 
     /**
-     * Метод запускает процесс регистрации и спрашивает, какого типа пользователь.
-     * В зависимости от выбора – вызывает соответствующий метод.
+     * Если в вашем проекте где-то по умолчанию вызывается UsersList без флага,
+     * можно завести ещё один конструктор по умолчанию:
+     */
+    public UsersList() {
+        this(false); // По умолчанию - английский, или на ваш выбор
+    }
+
+    /**
+     * Запуск процесса регистрации: выбор типа пользователя
      */
     public void register() {
-        System.out.println("Добро пожаловать в регистрацию");
-        System.out.println("Выберите опцию: ");
-        System.out.println("1. Student         2. Teacher        3. Admin\n4. TechSupport     5. Manager");
+        System.out.println(isRussian
+                ? "Добро пожаловать в регистрацию"
+                : "Welcome to registration");
+        System.out.println(isRussian
+                ? "Выберите опцию:"
+                : "Choose an option:");
+        System.out.println(isRussian
+                ? "1. Студент  2. Преподаватель  3. Админ\n4. Техподдержка  5. Менеджер"
+                : "1. Student  2. Teacher  3. Admin\n4. TechSupport  5. Manager");
 
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Очистка буфера
+        scanner.nextLine(); // очистка буфера
 
         switch (choice) {
             case 1:
@@ -46,128 +65,185 @@ public class UsersList {
                 registerManager();
                 break;
             default:
-                System.out.println("Неверный выбор. Попробуйте снова.");
+                System.out.println(isRussian
+                        ? "Неверный выбор. Попробуйте снова."
+                        : "Invalid choice. Try again.");
         }
     }
 
+    /**
+     * Регистрация студента
+     */
     private void registerStudent() {
-        System.out.println("Введите ID студента:");
+        System.out.println(isRussian ? "Введите ID студента:" : "Enter student ID:");
         String id = scanner.nextLine();
-        System.out.println("Введите полное имя студента:");
+        System.out.println(isRussian ? "Введите полное имя студента:" : "Enter student's full name:");
         String fullname = scanner.nextLine();
-        System.out.println("Введите email студента:");
+        System.out.println(isRussian ? "Введите email студента:" : "Enter student's email:");
         String email = scanner.nextLine();
-        System.out.println("Введите пароль студента:");
+        System.out.println(isRussian ? "Введите пароль студента:" : "Enter student's password:");
         String password = scanner.nextLine();
 
         Student student = new UndergraduateStudent(id, fullname, email, password);
         saveUserData(student);
-        System.out.println("Студент зарегистрирован успешно!");
+
+        System.out.println(isRussian
+                ? "Студент зарегистрирован успешно!"
+                : "Student registered successfully!");
     }
 
+    /**
+     * Регистрация учителя
+     */
     private void registerTeacher() {
-        System.out.println("Введите ID учителя:");
+        System.out.println(isRussian ? "Введите ID учителя:" : "Enter teacher ID:");
         String id = scanner.nextLine();
-        System.out.println("Введите полное имя учителя:");
+        System.out.println(isRussian ? "Введите полное имя учителя:" : "Enter teacher's full name:");
         String fullname = scanner.nextLine();
-        System.out.println("Введите email учителя:");
+        System.out.println(isRussian ? "Введите email учителя:" : "Enter teacher's email:");
         String email = scanner.nextLine();
-        System.out.println("Введите пароль учителя:");
+        System.out.println(isRussian ? "Введите пароль учителя:" : "Enter teacher's password:");
         String password = scanner.nextLine();
 
+        // Допустим, у учителя есть поле "department"
         Teacher teacher = new Teacher(id, fullname, email, password, "Department");
         saveUserData(teacher);
-        System.out.println("Учитель зарегистрирован успешно!");
+
+        System.out.println(isRussian
+                ? "Учитель зарегистрирован успешно!"
+                : "Teacher registered successfully!");
     }
 
+    /**
+     * Регистрация админа
+     */
     private void registerAdmin() {
-        System.out.println("Введите ID администратора:");
+        System.out.println(isRussian ? "Введите ID администратора:" : "Enter admin ID:");
         String id = scanner.nextLine();
-        System.out.println("Введите полное имя администратора:");
+        System.out.println(isRussian ? "Введите полное имя администратора:" : "Enter admin's full name:");
         String fullname = scanner.nextLine();
-        System.out.println("Введите email администратора:");
+        System.out.println(isRussian ? "Введите email администратора:" : "Enter admin's email:");
         String email = scanner.nextLine();
-        System.out.println("Введите пароль администратора:");
+        System.out.println(isRussian ? "Введите пароль администратора:" : "Enter admin's password:");
         String password = scanner.nextLine();
 
         Admin admin = new Admin(id, fullname, email, password);
         saveUserData(admin);
-        System.out.println("Администратор зарегистрирован успешно!");
+
+        System.out.println(isRussian
+                ? "Администратор зарегистрирован успешно!"
+                : "Admin registered successfully!");
     }
 
+    /**
+     * Регистрация сотрудника техподдержки
+     */
     private void registerTechSupport() {
-        System.out.println("Введите ID сотрудника техподдержки:");
+        System.out.println(isRussian
+                ? "Введите ID сотрудника техподдержки:"
+                : "Enter Tech Support Specialist ID:");
         String id = scanner.nextLine();
-        System.out.println("Введите полное имя сотрудника:");
+        System.out.println(isRussian
+                ? "Введите полное имя сотрудника:"
+                : "Enter specialist's full name:");
         String fullname = scanner.nextLine();
-        System.out.println("Введите email сотрудника:");
+        System.out.println(isRussian
+                ? "Введите email сотрудника:"
+                : "Enter specialist's email:");
         String email = scanner.nextLine();
-        System.out.println("Введите пароль сотрудника:");
+        System.out.println(isRussian
+                ? "Введите пароль сотрудника:"
+                : "Enter specialist's password:");
         String password = scanner.nextLine();
 
         TechSupportSpecialist techSupport = new TechSupportSpecialist(id, fullname, email, password);
         saveUserData(techSupport);
-        System.out.println("Сотрудник технической поддержки зарегистрирован успешно!");
-    }
 
-    private void registerManager() {
-        System.out.println("Введите ID менеджера:");
-        String id = scanner.nextLine();
-        System.out.println("Введите полное имя менеджера:");
-        String fullname = scanner.nextLine();
-        System.out.println("Введите email менеджера:");
-        String email = scanner.nextLine();
-        System.out.println("Введите пароль менеджера:");
-        String password = scanner.nextLine();
-
-        Manager manager = new Manager(id, fullname, email, password, "Management");
-        saveUserData(manager);
-        System.out.println("Менеджер зарегистрирован успешно!");
+        System.out.println(isRussian
+                ? "Сотрудник технической поддержки зарегистрирован успешно!"
+                : "Tech Support Specialist registered successfully!");
     }
 
     /**
-     * Сохранение данных пользователя в виде файла: users/UsersData/ТипПользователя/ID.txt
+     * Регистрация менеджера
+     */
+    private void registerManager() {
+        System.out.println(isRussian
+                ? "Введите ID менеджера:"
+                : "Enter manager ID:");
+        String id = scanner.nextLine();
+        System.out.println(isRussian
+                ? "Введите полное имя менеджера:"
+                : "Enter manager's full name:");
+        String fullname = scanner.nextLine();
+        System.out.println(isRussian
+                ? "Введите email менеджера:"
+                : "Enter manager's email:");
+        String email = scanner.nextLine();
+        System.out.println(isRussian
+                ? "Введите пароль менеджера:"
+                : "Enter manager's password:");
+        String password = scanner.nextLine();
+
+        // Предположим, у менеджера есть поле "department" = "Management"
+        Manager manager = new Manager(id, fullname, email, password, "Management");
+        saveUserData(manager);
+
+        System.out.println(isRussian
+                ? "Менеджер зарегистрирован успешно!"
+                : "Manager registered successfully!");
+    }
+
+    /**
+     * Сохранение данных пользователя в файл:
+     * users/UsersData/ТипПользователя/ID.txt
      */
     private void saveUserData(User user) {
-        String userType = user.getClass().getSimpleName(); // напр. "UndergraduateStudent", "Teacher" и т.д.
-        String directoryPath = "users/UsersData/" + userType; // Папка = имя класса
+        String userType = user.getClass().getSimpleName();
+        // Например: "UndergraduateStudent", "Teacher", "Manager" и т.д.
+
+        String directoryPath = "users/UsersData/" + userType;
         File directory = new File(directoryPath);
 
         // Создаём папку, если не существует
         if (!directory.exists()) {
             if (directory.mkdirs()) {
-                System.out.println("Directory " + directoryPath + " created successfully.");
+                // Можно вывести сообщение, но только если нужно
             } else {
-                System.out.println("Failed to create directory " + directoryPath);
+                System.out.println(isRussian
+                        ? "Ошибка создания директории: " + directoryPath
+                        : "Failed to create directory: " + directoryPath);
                 return;
             }
         }
 
-        // Формируем файл вида: users/UsersData/Teacher/123.txt
+        // Название файла: ID.txt
         String fileName = directoryPath + "/" + user.getId() + ".txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            // Запишем логин и пароль (ID:password)
+            // Запишем ID:password
             writer.write(user.getId() + ":" + user.getPassword());
             writer.newLine();
-            writer.write("Fullname: " + user.getFullname());
+            writer.write((isRussian ? "Полное имя: " : "Full name: ") + user.getFullname());
             writer.newLine();
-            writer.write("Email: " + user.getEmail());
-            System.out.println("User data saved in file: " + fileName);
+            writer.write((isRussian ? "Email: " : "Email: ") + user.getEmail());
+            // Если нужно, добавьте ещё какие-то поля
         } catch (IOException e) {
-            System.out.println("Error writing file: " + e.getMessage());
+            System.out.println(isRussian
+                    ? "Ошибка записи файла: " + e.getMessage()
+                    : "Error writing file: " + e.getMessage());
         }
     }
 
     /**
-     * Загрузка данных пользователя из локального файла
-     * На вход: ID + Тип
+     * Загрузка (чтение) данных пользователя из локального файла
      */
     public void loadUserData() {
-        System.out.println("Введите ID: ");
+        System.out.println(isRussian ? "Введите ID:" : "Enter ID:");
         String id = scanner.nextLine();
 
-        System.out.println("Выбери свой тип: ");
-        System.out.println("1. Student         2. Teacher        3. Admin\n4. TechSupport     5. Manager");
+        System.out.println(isRussian
+                ? "Выберите свой тип:\n1. Студент  2. Преподаватель  3. Админ\n4. Техподдержка  5. Менеджер"
+                : "Choose your type:\n1. Student  2. Teacher  3. Admin\n4. TechSupport  5. Manager");
 
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -176,8 +252,7 @@ public class UsersList {
 
         switch (choice) {
             case 1:
-                // Для студентов мы по умолчанию сохранили как UndergraduateStudent
-                // поэтому ищем файл в папке UndergraduateStudent
+                // У вас может быть так, что студент всегда "UndergraduateStudent"
                 file = new File("users/UsersData/UndergraduateStudent/" + id + ".txt");
                 break;
             case 2:
@@ -193,7 +268,9 @@ public class UsersList {
                 file = new File("users/UsersData/Manager/" + id + ".txt");
                 break;
             default:
-                System.out.println("Неверный выбор типа пользователя.");
+                System.out.println(isRussian
+                        ? "Неверный выбор типа пользователя."
+                        : "Invalid user type choice.");
                 return;
         }
 
@@ -201,19 +278,28 @@ public class UsersList {
             if (file.exists()) {
                 readFile(file);
             } else {
-                System.out.println("Файл пользователя не найден: " + file.getPath());
+                System.out.println(isRussian
+                        ? "Файл пользователя не найден: " + file.getPath()
+                        : "User file not found: " + file.getPath());
             }
         }
     }
 
+    /**
+     * Прочитать файл и вывести данные пользователя
+     */
     private void readFile(File file) {
         try (Scanner fileScanner = new Scanner(file)) {
-            System.out.println("Данные пользователя:");
+            System.out.println(isRussian
+                    ? "Данные пользователя:"
+                    : "User data:");
             while (fileScanner.hasNextLine()) {
                 System.out.println(fileScanner.nextLine());
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Ошибка при чтении файла: " + e.getMessage());
+            System.out.println(isRussian
+                    ? "Ошибка при чтении файла: " + e.getMessage()
+                    : "Error reading file: " + e.getMessage());
         }
     }
 }

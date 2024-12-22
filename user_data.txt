@@ -1,4 +1,0 @@
-tech:support:TechSupportSpecialist
-Admin:admin:Admin
-Manager:manager:Manager
-beknur:beka:Student

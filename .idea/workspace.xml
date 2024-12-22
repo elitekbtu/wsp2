@@ -6,8 +6,28 @@
   <component name="ChangeListManager">
     <list default="true" id="2559870d-cac6-4ec9-91cc-7d88101c222c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Danial_Sagyndyk_courses.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elnara_courses.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elnara_transcript.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Turarbek_courses.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Turarbek_transcript.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/res/Tester.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/res/Tester.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/res/users/UsersList.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/res/users/UsersList.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Tester.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tester.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/UsersList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/UsersList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/Admin/23B0303030.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/Admin/hello.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/Admin/null.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/Manager/23B000002.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/Manager/23B0909090.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/Teacher/23B000003.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/TechSupportSpecialist/23B000000.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/TechSupportSpecialist/null.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/UndergraduateStudent/23B00000.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/UndergraduateStudent/23B030304.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/UndergraduateStudent/23B0303097.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/UsersData/UndergraduateStudent/23B031469.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +76,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734898794142</updated>
-      <workItem from="1734898795978" duration="5068000" />
+      <workItem from="1734898795978" duration="6018000" />
     </task>
     <servers />
   </component>

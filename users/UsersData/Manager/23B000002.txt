@@ -1,3 +1,0 @@
-23B000002:manager
-Fullname: Manager Manager
-Email: manager@mail.com

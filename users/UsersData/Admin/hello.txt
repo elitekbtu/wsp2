@@ -1,3 +1,0 @@
-hello:adminn
-Fullname: iamadmin
-Email: adminsingo@mail.ru

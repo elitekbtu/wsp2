@@ -1,8 +1,0 @@
-Transcript for: Turarbek
-Course Grades:
-[FUN1105] Physics 1 (5 ECTS): 2,41
-[LAN1180] English 1 (10 ECTS): 1,25
-[CSCI2104] Databases (5 ECTS): 3,07
-[CSC1103] Programming Principles 1 (6 ECTS): 2,10
-
-GPA: 2,02

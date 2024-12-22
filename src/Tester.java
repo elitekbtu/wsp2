@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-// Подключаем ваши классы:
+// Подключаем ваши классы (оставьте свои импорты, как у вас в проекте):
 import news.NewsList;
 import users.UsersList;
 import users.employees.TechSupportOrder;
@@ -11,19 +11,28 @@ public class Tester {
     private static final String FILE_NAME = "user_data.txt";
 
     /**
-     * Хранит данные в формате:
-     *   login -> "пароль:тип"
-     * Пример:
-     *   userDatabase.get("ivan") = "qwerty:Teacher"
+     * Хранит данные в формате: login -> "пароль:тип"
+     * Пример: userDatabase.get("ivan") = "qwerty:Teacher"
      */
     private static HashMap<String, String> userDatabase = new HashMap<>();
 
     private static Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Флаг, определяющий, используем ли русский язык (true) или английский (false).
+     */
+    private static boolean isRussian = false;
+
     public static void main(String[] args) {
+        chooseLanguage();    // Сначала даём выбрать язык
         loadUserData();
+
         while (true) {
-            System.out.println("\nВыберите действие: 1 - Регистрация, 2 - Вход, 0 - Выход");
+            // Меню выбора действия (регистрация, вход, выход)
+            System.out.println(isRussian
+                    ? "\nВыберите действие: 1 - Регистрация, 2 - Вход, 0 - Выход"
+                    : "\nChoose an action: 1 - Register, 2 - Login, 0 - Exit");
+
             int choice = scanner.nextInt();
             scanner.nextLine(); // Очистка буфера
 
@@ -33,21 +42,38 @@ public class Tester {
                     break;
                 case 2:
                     if (loginUser()) {
-                        // Если логин успешен, переходим в mainMenu(...).
+                        // Если логин успешен, попадаем в mainMenu(...)
                     }
                     break;
                 case 0:
-                    System.out.println("Программа завершена.");
+                    System.out.println(isRussian ? "Программа завершена." : "Program finished.");
                     scanner.close();
                     return;
                 default:
-                    System.out.println("Неверный выбор. Попробуйте снова.");
+                    System.out.println(isRussian ? "Неверный выбор. Попробуйте снова." : "Invalid choice. Try again.");
             }
         }
     }
 
     /**
-     * Загружаем логины, пароли и типы пользователей из user_data.txt
+     * Метод выбора языка (1 - English, 2 - Russian).
+     */
+    private static void chooseLanguage() {
+        System.out.println("Choose language / Выберите язык:");
+        System.out.println("1 - English");
+        System.out.println("2 - Русский");
+
+        int langChoice = scanner.nextInt();
+        scanner.nextLine(); // очистка буфера
+        if (langChoice == 2) {
+            isRussian = true;    // Русский
+        } else {
+            isRussian = false;   // Английский (по умолчанию)
+        }
+    }
+
+    /**
+     * Загрузка данных (логин, пароль, тип) из файла user_data.txt
      */
     private static void loadUserData() {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -55,23 +81,24 @@ public class Tester {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(":");
                 if (parts.length == 3) {
-                    // parts[0] = login, parts[1] = password, parts[2] = type
                     String login = parts[0];
                     String password = parts[1];
                     String userType = parts[2];
                     userDatabase.put(login, password + ":" + userType);
                 }
             }
-            System.out.println("Данные пользователей загружены.");
+            System.out.println(isRussian ? "Данные пользователей загружены." : "User data loaded.");
         } catch (FileNotFoundException e) {
-            System.out.println("Файл данных не найден. Будет создан новый при регистрации.");
+            System.out.println(isRussian
+                    ? "Файл данных не найден. Будет создан новый при регистрации."
+                    : "User data file not found. A new file will be created upon registration.");
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла: " + e.getMessage());
+            System.out.println((isRussian ? "Ошибка чтения файла: " : "Error reading file: ") + e.getMessage());
         }
     }
 
     /**
-     * Сохраняем userDatabase в user_data.txt
+     * Сохранение userDatabase обратно в user_data.txt
      */
     private static void saveUserData() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
@@ -85,34 +112,33 @@ public class Tester {
                     writer.newLine();
                 }
             }
-            System.out.println("Данные пользователей сохранены.");
+            System.out.println(isRussian ? "Данные пользователей сохранены." : "User data saved.");
         } catch (IOException e) {
-            System.out.println("Ошибка записи файла: " + e.getMessage());
+            System.out.println(isRussian
+                    ? "Ошибка записи файла: " + e.getMessage()
+                    : "Error writing file: " + e.getMessage());
         }
     }
 
     /**
-     * Регистрация: логин, пароль, тип пользователя + вызов UsersList для подробной регистрации
+     * Регистрация нового пользователя
      */
     private static void registerUser() {
-        System.out.println("Введите логин:");
+        System.out.println(isRussian ? "Введите логин:" : "Enter login:");
         String registerLogin = scanner.nextLine();
 
         if (userDatabase.containsKey(registerLogin)) {
-            System.out.println("Логин уже существует. Попробуйте другой.");
+            System.out.println(isRussian ? "Логин уже существует. Попробуйте другой." : "Login already exists. Try another.");
         } else {
-            System.out.println("Введите пароль:");
+            System.out.println(isRussian ? "Введите пароль:" : "Enter password:");
             String registerPassword = scanner.nextLine();
 
-            // Тип
-            System.out.println("Выберите тип пользователя:");
-            System.out.println("1 - Student");
-            System.out.println("2 - Teacher");
-            System.out.println("3 - Manager");
-            System.out.println("4 - Admin");
-            System.out.println("5 - TechSupportSpecialist");
+            // Выбираем тип пользователя
+            System.out.println(isRussian
+                    ? "Выберите тип пользователя:\n1 - Студент\n2 - Преподаватель\n3 - Менеджер\n4 - Админ\n5 - Техподдержка"
+                    : "Choose user type:\n1 - Student\n2 - Teacher\n3 - Manager\n4 - Admin\n5 - TechSupportSpecialist");
             int typeChoice = scanner.nextInt();
-            scanner.nextLine(); // Очистка буфера
+            scanner.nextLine(); // очистка буфера
 
             String userType;
             switch (typeChoice) {
@@ -132,19 +158,21 @@ public class Tester {
                     userType = "TechSupportSpecialist";
                     break;
                 default:
-                    System.out.println("Неверный выбор. Тип по умолчанию: Student.");
+                    System.out.println(isRussian
+                            ? "Неверный выбор. Тип по умолчанию: Студент."
+                            : "Invalid choice. Default user type: Student.");
                     userType = "Student";
             }
 
-            // Сохраняем в userDatabase
+            // Сохраняем
             userDatabase.put(registerLogin, registerPassword + ":" + userType);
             saveUserData();
 
-            // Вызываем UsersList для сохранения файлов (ID, fullname, email).
-            UsersList usersList = new UsersList();
+            // Дополнительно вызываем UsersList для детальной регистрации (ID, fullname, email)
+            UsersList usersList = new UsersList(isRussian); // Передадим флаг языка в конструктор (если нужно)
             usersList.register();
 
-            System.out.println("Регистрация успешна!");
+            System.out.println(isRussian ? "Регистрация успешна!" : "Registration successful!");
         }
     }
 
@@ -152,9 +180,9 @@ public class Tester {
      * Авторизация
      */
     private static boolean loginUser() {
-        System.out.println("Введите логин:");
+        System.out.println(isRussian ? "Введите логин:" : "Enter login:");
         String login = scanner.nextLine();
-        System.out.println("Введите пароль:");
+        System.out.println(isRussian ? "Введите пароль:" : "Enter password:");
         String password = scanner.nextLine();
 
         if (userDatabase.containsKey(login)) {
@@ -164,46 +192,44 @@ public class Tester {
                 String storedPassword = parts[0];
                 String userType = parts[1];
                 if (storedPassword.equals(password)) {
-                    System.out.println("Вход выполнен успешно! Добро пожаловать, " + login + "!");
+                    System.out.println(isRussian
+                            ? "Вход выполнен успешно! Добро пожаловать, " + login + "!"
+                            : "Login successful! Welcome, " + login + "!");
                     mainMenu(userType);
                     return true;
                 }
             }
         }
 
-        System.out.println("Ошибка входа. Проверьте логин и пароль.");
+        System.out.println(isRussian ? "Ошибка входа. Проверьте логин и пароль." : "Login error. Check login and password.");
         return false;
     }
 
     /**
-     * Главное меню в зависимости от userType
+     * Главное меню с учётом типа пользователя
      */
     private static void mainMenu(String userType) {
         while (true) {
-            System.out.println("\nГлавное меню:");
-            System.out.println("1 - Новостная лента");
-            System.out.println("2 - Данные пользователя");
-            System.out.println("3 - Сформировать и прочитать транскрипт");
-            System.out.println("4 - Курсы");
-            System.out.println("5 - Техническая поддержка");
-            System.out.println("6 - Выйти");
+            System.out.println(isRussian
+                    ? "\nГлавное меню:\n1 - Новостная лента\n2 - Данные пользователя\n3 - Сформировать и прочитать транскрипт\n4 - Курсы\n5 - Техническая поддержка\n6 - Выйти"
+                    : "\nMain menu:\n1 - News feed\n2 - User data\n3 - Generate & read transcript\n4 - Courses\n5 - Tech support\n6 - Exit");
 
-            // Специальный пункт (7) для определённых ролей
+            // Если Teacher / Manager / Admin / TechSupportSpecialist — добавим 7
             if ("Teacher".equalsIgnoreCase(userType)) {
-                System.out.println("7 - Поставить оценку студенту");
+                System.out.println(isRussian ? "7 - Поставить оценку студенту" : "7 - Set grade for student");
             } else if ("Manager".equalsIgnoreCase(userType)) {
-                System.out.println("7 - Управление финансами");
+                System.out.println(isRussian ? "7 - Финансовый кабинет" : "7 - Finance cabinet");
             } else if ("Admin".equalsIgnoreCase(userType)) {
-                System.out.println("7 - Удалить пользователя");
+                System.out.println(isRussian ? "7 - Удалить пользователя" : "7 - Remove user");
             } else if ("TechSupportSpecialist".equalsIgnoreCase(userType)) {
-                System.out.println("7 - Решить проблему пользователя");
+                System.out.println(isRussian ? "7 - Решить проблему пользователя" : "7 - Solve user issue");
             }
 
             int choice;
             try {
                 choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Некорректный ввод. Попробуйте снова.");
+                System.out.println(isRussian ? "Некорректный ввод. Попробуйте снова." : "Invalid input. Try again.");
                 continue;
             }
 
@@ -215,12 +241,16 @@ public class Tester {
                     userData();
                     break;
                 case 3:
-                    System.out.println("Введите имя пользователя (логин), для кого формируем транскрипт:");
+                    System.out.println(isRussian
+                            ? "Введите логин пользователя (для которого формируем транскрипт):"
+                            : "Enter the user login (for whom we generate transcript):");
                     String studentName = scanner.nextLine();
                     transcript(studentName);
                     break;
                 case 4:
-                    System.out.println("Введите имя пользователя (логин) для сохранения курсов:");
+                    System.out.println(isRussian
+                            ? "Введите логин пользователя (для сохранения курсов):"
+                            : "Enter the user login (for course registration):");
                     String usernameForCourses = scanner.nextLine();
                     registerForCourses(usernameForCourses);
                     break;
@@ -228,8 +258,8 @@ public class Tester {
                     technicalSupport();
                     break;
                 case 6:
-                    System.out.println("Выход из меню.");
-                    return; // Выходим в main
+                    System.out.println(isRussian ? "Выход из меню." : "Exiting menu.");
+                    return;
                 case 7:
                     if ("Teacher".equalsIgnoreCase(userType)) {
                         setGradeMenu();
@@ -240,130 +270,157 @@ public class Tester {
                     } else if ("TechSupportSpecialist".equalsIgnoreCase(userType)) {
                         solveIssueMenu();
                     } else {
-                        System.out.println("Недоступный пункт меню.");
+                        System.out.println(isRussian
+                                ? "Недоступный пункт меню."
+                                : "Menu item not available.");
                     }
                     break;
                 default:
-                    System.out.println("Неверный выбор. Попробуйте снова.");
+                    System.out.println(isRussian
+                            ? "Неверный выбор. Попробуйте снова."
+                            : "Invalid choice. Try again.");
             }
         }
     }
 
     /**
-     * Поставить оценку студенту (Teacher)
+     * Пример для Teacher
      */
     private static void setGradeMenu() {
-        System.out.println("Введите ID студента, которому хотите поставить оценку:");
+        System.out.println(isRussian ? "Введите ID студента для выставления оценки:" : "Enter student ID to set grade:");
         String studentId = scanner.nextLine();
-        System.out.println("Введите оценку:");
+        System.out.println(isRussian ? "Введите оценку (число):" : "Enter grade (number):");
         String grade = scanner.nextLine();
-        // Логика сохранения оценки в БД или файл
-        System.out.println("Учитель поставил студенту " + studentId + " оценку: " + grade);
+        // Пример логики
+        System.out.println(isRussian
+                ? "Учитель поставил студенту " + studentId + " оценку: " + grade
+                : "Teacher set grade " + grade + " for student " + studentId);
     }
 
     /**
-     * Управление финансами (Manager)
-     */
-    /**
-     * Управление финансами (Manager)
-     * Здесь простая реализация расчёта стоимости обучения студента
-     * по сумме всех кредитов (ECTS).
+     * Пример: Финансовый кабинет (Manager)
+     * Считает сумму обучения на основе ECTS * стоимость 1 кредита
      */
     private static void financeMenu() {
-        System.out.println("=== Управление финансами ===");
+        System.out.println(isRussian
+                ? "=== Финансовый кабинет ==="
+                : "=== Finance Cabinet ===");
 
-        System.out.print("Введите логин студента, для кого будем считать стоимость обучения: ");
+        System.out.println(isRussian
+                ? "Введите логин студента, для которого считаем оплату:"
+                : "Enter student login to calculate tuition:");
         String studentLogin = scanner.nextLine().trim();
 
-        // Спросим стоимость одного кредита:
-        System.out.print("Введите стоимость одного кредита (например, 5000): ");
-        double costPerCredit = 0;
+        System.out.println(isRussian
+                ? "Введите стоимость одного кредита (например, 5000):"
+                : "Enter cost per credit (e.g., 5000):");
+        double costPerCredit;
         try {
             costPerCredit = Double.parseDouble(scanner.nextLine());
         } catch (NumberFormatException e) {
-            System.out.println("Некорректная стоимость. Попробуйте снова.");
+            System.out.println(isRussian
+                    ? "Некорректная стоимость. Выходим."
+                    : "Invalid cost. Exiting.");
             return;
         }
 
-        // Пытаемся прочитать файл studentLogin_courses.txt и суммировать ECTS
         String coursesFile = studentLogin.replaceAll("\\s+", "_") + "_courses.txt";
         File file = new File(coursesFile);
         if (!file.exists()) {
-            System.out.println("Файл с курсами не найден: " + coursesFile);
+            System.out.println(isRussian
+                    ? "Файл с курсами не найден: " + coursesFile
+                    : "Courses file not found: " + coursesFile);
             return;
         }
 
-        // Считаем сумму кредитов
         int totalEcts = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Пример: [CSC1103] Programming Principles 1 (6 ECTS)
                 if (line.isEmpty()) continue;
-                // Вытаскиваем количество ECTS через регулярное выражение
                 try {
+                    // Вытаскиваем ECTS из строки вида: (6 ECTS)
                     String ectsStr = line.replaceAll(".*\\((\\d+) ECTS\\).*", "$1");
                     int ects = Integer.parseInt(ectsStr);
                     totalEcts += ects;
-                } catch (NumberFormatException e) {
-                    // Если строка не подошла формату или ECTS не число — пропускаем
+                } catch (NumberFormatException ex) {
+                    // пропускаем
                 }
             }
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла курсов: " + e.getMessage());
+            System.out.println(isRussian
+                    ? "Ошибка чтения файла курсов: " + e.getMessage()
+                    : "Error reading courses file: " + e.getMessage());
             return;
         }
 
-        // Если у студента вообще нет курсов
         if (totalEcts == 0) {
-            System.out.println("У студента " + studentLogin + " нет курсов (ECTS = 0).");
+            System.out.println(isRussian
+                    ? "У студента нет курсов или ECTS = 0."
+                    : "Student has no courses or ECTS = 0.");
             return;
         }
 
-        // Итого: cost = costPerCredit * totalEcts
         double totalCost = costPerCredit * totalEcts;
-        System.out.println("Общее количество кредитов: " + totalEcts);
-        System.out.println("Стоимость одного кредита: " + costPerCredit);
-        System.out.println("Итоговая сумма за обучение: " + totalCost);
+        System.out.println(isRussian
+                ? "Общее количество кредитов: " + totalEcts
+                + "\nСтоимость одного кредита: " + costPerCredit
+                + "\nИтоговая сумма за обучение: " + totalCost
+                : "Total ECTS: " + totalEcts
+                + "\nCost per credit: " + costPerCredit
+                + "\nTuition total cost: " + totalCost);
     }
 
-
     /**
-     * Удалить пользователя (Admin)
+     * Администратор: удалить пользователя
      */
     private static void adminMenu() {
-        System.out.println("Введите логин пользователя, которого хотите удалить:");
+        System.out.println(isRussian
+                ? "Введите логин пользователя, которого хотите удалить:"
+                : "Enter the login of the user to remove:");
         String loginToDelete = scanner.nextLine();
         if (userDatabase.containsKey(loginToDelete)) {
             userDatabase.remove(loginToDelete);
             saveUserData();
-            System.out.println("Пользователь " + loginToDelete + " успешно удалён.");
+            System.out.println(isRussian
+                    ? "Пользователь " + loginToDelete + " успешно удалён."
+                    : "User " + loginToDelete + " removed successfully.");
         } else {
-            System.out.println("Пользователь с логином " + loginToDelete + " не найден.");
+            System.out.println(isRussian
+                    ? "Пользователь " + loginToDelete + " не найден."
+                    : "User " + loginToDelete + " not found.");
         }
     }
 
     /**
-     * Решить проблему пользователя (TechSupport)
+     * Техподдержка (TechSupportSpecialist)
      */
     private static void solveIssueMenu() {
-        System.out.println("Введите ID запроса техподдержки, который хотите решить:");
+        System.out.println(isRussian
+                ? "Введите ID запроса техподдержки, который хотите решить:"
+                : "Enter the tech support ticket ID to solve:");
         String ticketId = scanner.nextLine();
 
         TechSupportOrder order = TechSupportOrder.findRegistry(ticketId);
         if (order == null) {
-            System.out.println("Запрос с таким ID не найден.");
+            System.out.println(isRussian
+                    ? "Запрос с таким ID не найден."
+                    : "Ticket with that ID not found.");
             return;
         }
         if (order.isDone()) {
-            System.out.println("Этот запрос уже завершён.");
+            System.out.println(isRussian
+                    ? "Этот запрос уже завершён."
+                    : "This ticket is already done.");
             return;
         }
 
         order.setDone(true);
         order.setAccepted(false);
         order.setNew(false);
-        System.out.println("Запрос " + ticketId + " отмечен как решённый.");
+        System.out.println(isRussian
+                ? "Запрос " + ticketId + " отмечен как решённый."
+                : "Ticket " + ticketId + " marked as solved.");
     }
 
     /* ================================
@@ -374,12 +431,16 @@ public class Tester {
      * Новостная лента
      */
     private static void newsFeed() {
-        System.out.println("Вы выбрали новостную ленту.");
+        System.out.println(isRussian
+                ? "Вы выбрали новостную ленту."
+                : "You chose the news feed.");
         NewsList newsList = new NewsList();
 
         Random random = new Random();
         int count = 5;
-        System.out.println("Последние новости:");
+        System.out.println(isRussian
+                ? "Последние новости:"
+                : "Latest news:");
 
         for (int i = 0; i < count; i++) {
             int index = random.nextInt(newsList.news.length);
@@ -388,32 +449,29 @@ public class Tester {
     }
 
     /**
-     * Данные пользователя (студента/сотрудника) — считываем из файлов
+     * Данные пользователя (студента/сотрудника)
      */
     private static void userData() {
-        System.out.println("Вы выбрали просмотр данных пользователя.");
-        UsersList usersList = new UsersList();
+        System.out.println(isRussian
+                ? "Вы выбрали просмотр данных пользователя."
+                : "You chose to view user data.");
+        UsersList usersList = new UsersList(isRussian);
         usersList.loadUserData();
     }
 
     /**
-     * Сразу формируем и читаем транскрипт.
-     * 1. Берём курсы из "studentName_courses.txt".
-     * 2. Генерируем случайные оценки и GPA.
-     * 3. Записываем в "studentName_transcript.txt".
-     * 4. Сразу же читаем этот файл и выводим его содержимое в консоль.
+     * Генерация транскрипта и сразу чтение
      */
     private static void transcript(String studentName) {
         String inputFileName = studentName.replaceAll("\\s+", "_") + "_courses.txt";
         Map<String, Integer> courses = new LinkedHashMap<>();
 
-        // 1. Считываем курсы из файла
+        // Чтение курсов
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Пример строки: [CSC1103] Programming Principles 1 (6 ECTS)
                 if (line.isEmpty()) continue;
-
+                // [CSC1103] Programming Principles 1 (6 ECTS)
                 int credits;
                 try {
                     String ectsStr = line.replaceAll(".*\\((\\d+) ECTS\\).*", "$1");
@@ -421,38 +479,45 @@ public class Tester {
                 } catch (NumberFormatException e) {
                     continue;
                 }
-
                 String courseName = line.split("\\(\\d+ ECTS\\)")[0].trim();
                 courses.put(courseName, credits);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Файл с курсами не найден: " + inputFileName);
+            System.out.println(isRussian
+                    ? "Файл с курсами не найден: " + inputFileName
+                    : "Courses file not found: " + inputFileName);
             return;
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла: " + inputFileName);
+            System.out.println(isRussian
+                    ? "Ошибка чтения файла: " + inputFileName
+                    : "Error reading file: " + inputFileName);
             e.printStackTrace();
             return;
         }
 
         if (courses.isEmpty()) {
-            System.out.println("Не найдено ни одного курса для " + studentName);
+            System.out.println(isRussian
+                    ? "У пользователя " + studentName + " нет курсов."
+                    : "No courses found for user " + studentName);
             return;
         }
 
-        // 2. Генерируем оценки, считаем GPA
+        // Генерируем оценки, считаем GPA
         Random random = new Random();
         double totalCredits = 0;
         double weightedSum = 0;
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Transcript for: ").append(studentName).append("\n");
-        sb.append("Course Grades:\n");
+        sb.append(isRussian
+                ? "Транскрипт для: " + studentName + "\n"
+                : "Transcript for: " + studentName + "\n");
+        sb.append(isRussian ? "Оценки по курсам:\n" : "Course Grades:\n");
 
         for (Map.Entry<String, Integer> entry : courses.entrySet()) {
             String course = entry.getKey();
             int credits = entry.getValue();
-
             double grade = Math.round(random.nextDouble() * 4.0 * 100) / 100.0;
+
             sb.append(String.format("%s (%d ECTS): %.2f\n", course, credits, grade));
 
             totalCredits += credits;
@@ -462,42 +527,51 @@ public class Tester {
         double gpa = weightedSum / totalCredits;
         sb.append(String.format("\nGPA: %.2f\n", gpa));
 
-        // 3. Записываем транскрипт
+        // Записываем в файл
         String transcriptFile = studentName.replaceAll("\\s+", "_") + "_transcript.txt";
         try (FileWriter writer = new FileWriter(transcriptFile)) {
             writer.write(sb.toString());
         } catch (IOException e) {
-            System.out.println("Ошибка записи транскрипта.");
+            System.out.println(isRussian
+                    ? "Ошибка записи транскрипта."
+                    : "Error writing transcript.");
             e.printStackTrace();
             return;
         }
 
-        // 4. Сразу же читаем файл транскрипта и выводим
+        // Сразу читаем и выводим
         try (BufferedReader br = new BufferedReader(new FileReader(transcriptFile))) {
             String line;
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
             }
         } catch (IOException e) {
-            System.out.println("Ошибка при чтении транскрипта: " + transcriptFile);
+            System.out.println(isRussian
+                    ? "Ошибка при чтении транскрипта: " + transcriptFile
+                    : "Error reading transcript: " + transcriptFile);
             e.printStackTrace();
         }
     }
 
     /**
-     * Показать список доступных курсов и дать выбрать
+     * Показать и выбрать курсы
      */
     private static void registerForCourses(String username) {
         showAvailableCourses();
 
-        System.out.println("\nВведите номера курсов через запятую (например: 1,3,4):");
+        System.out.println(isRussian
+                ? "\nВведите номера курсов через запятую (например: 1,3,4):"
+                : "\nEnter course numbers separated by commas (e.g., 1,3,4):");
         String input = scanner.nextLine();
         String[] selectedIndexes = input.split(",");
 
         Data[] courses = Data.getAvailableCourses();
         ArrayList<Data> selectedCourses = new ArrayList<>();
 
-        System.out.println("Вы выбрали следующие курсы:");
+        System.out.println(isRussian
+                ? "Вы выбрали следующие курсы:"
+                : "You selected the following courses:");
+
         for (String indexStr : selectedIndexes) {
             try {
                 int index = Integer.parseInt(indexStr.trim()) - 1;
@@ -509,17 +583,23 @@ public class Tester {
                             selectedCourse.getEcts());
                     selectedCourses.add(selectedCourse);
                 } else {
-                    System.out.println("Неверный номер курса: " + (index + 1));
+                    System.out.println(isRussian
+                            ? "Неверный номер курса: " + (index + 1)
+                            : "Invalid course number: " + (index + 1));
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Некорректный ввод: " + indexStr);
+                System.out.println(isRussian
+                        ? "Некорректный ввод: " + indexStr
+                        : "Invalid input: " + indexStr);
             }
         }
 
         if (!selectedCourses.isEmpty()) {
             saveSelectedCourses(username, selectedCourses.toArray(new Data[0]));
         } else {
-            System.out.println("Курсы не были выбраны.");
+            System.out.println(isRussian
+                    ? "Курсы не были выбраны."
+                    : "No courses were selected.");
         }
     }
 
@@ -527,7 +607,9 @@ public class Tester {
      * Показать доступные курсы
      */
     private static void showAvailableCourses() {
-        System.out.println("Доступные курсы:");
+        System.out.println(isRussian
+                ? "Доступные курсы:"
+                : "Available courses:");
         Data[] courses = Data.getAvailableCourses();
         for (int i = 0; i < courses.length; i++) {
             Data course = courses[i];
@@ -540,7 +622,7 @@ public class Tester {
     }
 
     /**
-     * Сохранить выбранные курсы в файл username_courses.txt
+     * Сохранить выбранные курсы
      */
     private static void saveSelectedCourses(String username, Data[] selectedCourses) {
         String fileName = username.replaceAll("\\s+", "_") + "_courses.txt";
@@ -551,28 +633,35 @@ public class Tester {
                         course.getDiscipline(),
                         course.getEcts()));
             }
-            System.out.println("Выбранные курсы сохранены в файл: " + fileName);
+            System.out.println(isRussian
+                    ? "Выбранные курсы сохранены в файл: " + fileName
+                    : "Selected courses saved to file: " + fileName);
         } catch (IOException e) {
-            System.out.println("Ошибка записи файла: " + e.getMessage());
+            System.out.println(isRussian
+                    ? "Ошибка записи файла: " + e.getMessage()
+                    : "Error writing file: " + e.getMessage());
         }
     }
 
     /**
-     * Меню технической поддержки
+     * Меню технической поддержки (общий метод)
      */
     private static void technicalSupport() {
-        System.out.println("Вы выбрали техническую поддержку.");
+        System.out.println(isRussian
+                ? "Вы выбрали техническую поддержку."
+                : "You chose Tech Support.");
         while (true) {
-            System.out.println("\n1 - Создать запрос");
-            System.out.println("2 - Просмотреть запросы");
-            System.out.println("3 - Закрыть запрос");
-            System.out.println("4 - Вернуться в главное меню");
+            System.out.println(isRussian
+                    ? "\n1 - Создать запрос\n2 - Просмотреть запросы\n3 - Закрыть запрос\n4 - Вернуться в главное меню"
+                    : "\n1 - Create request\n2 - View requests\n3 - Close request\n4 - Return to main menu");
 
             int choice;
             try {
                 choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Некорректный ввод. Попробуйте снова.");
+                System.out.println(isRussian
+                        ? "Некорректный ввод. Попробуйте снова."
+                        : "Invalid input. Try again.");
                 continue;
             }
 
@@ -587,45 +676,55 @@ public class Tester {
                     closeSupportRequest();
                     break;
                 case 4:
-                    System.out.println("Возвращаемся в главное меню.");
+                    System.out.println(isRussian
+                            ? "Возвращаемся в главное меню."
+                            : "Returning to main menu.");
                     return;
                 default:
-                    System.out.println("Неверный выбор. Попробуйте снова.");
+                    System.out.println(isRussian
+                            ? "Неверный выбор. Попробуйте снова."
+                            : "Invalid choice. Try again.");
             }
         }
     }
 
     /**
-     * Создать запрос в техподдержку
+     * Создать запрос
      */
     private static void createSupportRequest() {
-        System.out.println("Введите описание вашего запроса:");
+        System.out.println(isRussian
+                ? "Введите описание вашего запроса:"
+                : "Enter description of your request:");
         String description = scanner.nextLine();
         String orderId = "REQ-" + System.currentTimeMillis();
 
         TechSupportOrder newOrder = new TechSupportOrder(orderId, description, true, false, false);
         TechSupportOrder.addRegistry(newOrder);
 
-        System.out.println("Ваш запрос создан с ID: " + orderId);
+        System.out.println(isRussian
+                ? "Ваш запрос создан с ID: " + orderId
+                : "Your request created with ID: " + orderId);
     }
 
     /**
-     * Посмотреть запросы
+     * Просмотреть все запросы
      */
     private static void viewSupportRequests() {
-        System.out.println("Ваши запросы:");
+        System.out.println(isRussian ? "Ваши запросы:" : "Your requests:");
         boolean hasRequests = false;
 
         for (TechSupportOrder order : TechSupportOrder.techSupportOrderRegistry) {
-            System.out.println("ID: " + order.getOrderId());
-            System.out.println("Описание: " + order.getDescription());
-            System.out.println("Статус: " + getOrderStatus(order));
+            System.out.println(isRussian
+                    ? "ID: " + order.getOrderId() + "\nОписание: " + order.getDescription() + "\nСтатус: " + getOrderStatus(order)
+                    : "ID: " + order.getOrderId() + "\nDescription: " + order.getDescription() + "\nStatus: " + getOrderStatus(order));
             System.out.println();
             hasRequests = true;
         }
 
         if (!hasRequests) {
-            System.out.println("У вас нет активных запросов.");
+            System.out.println(isRussian
+                    ? "У вас нет активных запросов."
+                    : "You have no active requests.");
         }
     }
 
@@ -633,7 +732,9 @@ public class Tester {
      * Закрыть запрос
      */
     private static void closeSupportRequest() {
-        System.out.println("Введите ID запроса, который хотите закрыть:");
+        System.out.println(isRussian
+                ? "Введите ID запроса, который хотите закрыть:"
+                : "Enter the request ID you want to close:");
         String orderId = scanner.nextLine();
 
         TechSupportOrder order = TechSupportOrder.findRegistry(orderId);
@@ -642,22 +743,28 @@ public class Tester {
                 order.setDone(true);
                 order.setAccepted(false);
                 order.setNew(false);
-                System.out.println("Запрос с ID " + orderId + " закрыт.");
+                System.out.println(isRussian
+                        ? "Запрос с ID " + orderId + " закрыт."
+                        : "Request with ID " + orderId + " is closed.");
             } else {
-                System.out.println("Этот запрос уже завершён.");
+                System.out.println(isRussian
+                        ? "Этот запрос уже завершён."
+                        : "This request is already done.");
             }
         } else {
-            System.out.println("Запрос с таким ID не найден.");
+            System.out.println(isRussian
+                    ? "Запрос с таким ID не найден."
+                    : "Request with this ID not found.");
         }
     }
 
     /**
-     * Удобное описание статуса
+     * Статус запроса
      */
     private static String getOrderStatus(TechSupportOrder order) {
-        if (order.isDone()) return "Завершён";
-        if (order.isAccepted()) return "Принят";
-        if (order.isNew()) return "Новый";
-        return "Неизвестный статус";
+        if (order.isDone()) return isRussian ? "Завершён" : "Done";
+        if (order.isAccepted()) return isRussian ? "Принят" : "Accepted";
+        if (order.isNew()) return isRussian ? "Новый" : "New";
+        return isRussian ? "Неизвестный статус" : "Unknown status";
     }
 }

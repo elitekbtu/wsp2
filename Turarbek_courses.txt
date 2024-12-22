@@ -1,4 +1,0 @@
-[CSC1103] Programming Principles 1 (6 ECTS)
-[LAN1180] English 1  (10 ECTS)
-[FUN1105] Physics 1 (5 ECTS)
-[CSCI2104] Databases (5 ECTS)

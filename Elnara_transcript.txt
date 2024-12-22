@@ -1,7 +1,0 @@
-Transcript for: Elnara
-Course Grades:
-[CSC1103] Programming Principles 1 (6 ECTS): 1,02
-[CSCI1102] Discrete Structures (5 ECTS): 1,98
-[LAN1180] English 1 (10 ECTS): 3,36
-
-GPA: 2,36
