@@ -1,0 +1,2 @@
+OOP Zhumadir Tomiris Elnara;OOP;200;2024;10.1234/abcd.2024.5678
+OOP Elnara 2024;oop;200;2024;10.1234/abcd.2024.5678

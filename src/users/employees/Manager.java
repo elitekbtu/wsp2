@@ -23,7 +23,7 @@ public class Manager extends Employee {
         Course.addCourseToRegistry(course);
     }
 
-    // Method to assign a course to a teacher
+
     public void assignCourseToTeacher(Course course, Teacher teacher) {
         course.addInstructor(teacher);
     }
@@ -50,12 +50,7 @@ public class Manager extends Employee {
     }
 
 
-    /**
-     * Method to view information about students
-     * @param studentType type of student that will be used
-     * @param criteria критерий по которому будет производиться сортировка.
-     *                 Возможные значения: GPA, ALPHABETICAL, DEPARTMENT
-     */
+
     public <T extends Student> Vector<T> viewStudentInformation(Class<T> studentType, SortingCriteria criteria) {
         Vector<T> sortedStudents = User.getAllUsers(studentType);
         switch (criteria) {

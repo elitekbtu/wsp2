@@ -5,10 +5,7 @@ import enums.NewsTags;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * The News class represents a news article with a title, content, date, news tag, comments, and comment count.
- * It implements the Comparable interface for sorting based on certain criteria.
- */
+
 public class News implements Comparable<News> {
 
     // Static list to store all news articles.

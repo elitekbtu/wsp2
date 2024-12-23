@@ -8,12 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static news.News.*;
 
-/**
- * The {@code ResearchPaper} class represents a research paper with information such as title, authors, journal, pages,
- * publication date, DOI, and citations. It provides methods for citations in different formats and managing citations.
- */
 public class ResearchPaper {
     private String title;
     private List<Researcher> authors = new ArrayList<>();
@@ -23,10 +18,9 @@ public class ResearchPaper {
     private String doi;
     private ArrayList<String> citations = new ArrayList<>();
 
-
-
     public ResearchPaper() {}
 
+    // Доп. конструктор (без Date) - не используем в данном варианте
     public ResearchPaper(String title, String journal, int pages, String doi) {
         this.title = title;
         this.journal = journal;
@@ -36,26 +30,8 @@ public class ResearchPaper {
     }
 
     /**
-     * Parameterized constructor for creating a research paper with specified details.
-     *
-     * @param title           The title of the research paper.
-     * @param authors         List of authors who contributed to the research paper.
-     * @param journal         The text of research paper.
-     * @param pages           The number of pages in the research paper.
-     * @param publicationDate The date when the research paper was published.
-     * @param doi             The Digital Object Identifier (DOI) associated with the research paper.
-     * @param citations       List of citations referencing this research paper.
+     * Конструктор, который используем в Tester:
      */
-    public ResearchPaper(String title, List<Researcher> authors, String journal, int pages, Date publicationDate, String doi, ArrayList<String> citations) {
-        this.title = title;
-        this.authors = authors;
-        this.journal = journal;
-        this.pages = pages;
-        this.publicationDate = publicationDate;
-        this.doi = doi;
-        this.citations = citations;
-    }
-
     public ResearchPaper(String title, String journal, int pages, Date publicationDate, String doi) {
         this.title = title;
         this.journal = journal;
@@ -64,12 +40,21 @@ public class ResearchPaper {
         this.doi = doi;
     }
 
-    /**
-     * Returned a citation for the research paper based on the specified format.
-     * @param format The format of the citation (PLAIN_TEXT or BIBTEX).
-     * @return The generated citation as a String.
-     */
-
+    public ResearchPaper(String title,
+                         List<Researcher> authors,
+                         String journal,
+                         int pages,
+                         Date publicationDate,
+                         String doi,
+                         ArrayList<String> citations) {
+        this.title = title;
+        this.authors = authors;
+        this.journal = journal;
+        this.pages = pages;
+        this.publicationDate = publicationDate;
+        this.doi = doi;
+        this.citations = citations;
+    }
 
     public String getCitation(Format format) {
         String s = "";
@@ -82,7 +67,6 @@ public class ResearchPaper {
             s += "pp. " + pages;
             s += ", doi: " + doi;
         }
-
         else {
             s += "author={";
             for (Researcher r : authors) {
@@ -94,14 +78,10 @@ public class ResearchPaper {
             s += "pages={" + pages + "},\n";
             s += "doi={" + doi +"}";
         }
-
         return s;
     }
 
-    /**
-     * Publishes the research paper as news by adding it to the list of news articles.
-     * @param p The research paper to be published.
-     */
+
     public static void publication(ResearchPaper p){
         News.addNews(new News(p.getTitle(), p.getJournal(), NewsTags.RESEARCH));
     }
@@ -113,6 +93,8 @@ public class ResearchPaper {
     public void addCitation(String c){
         citations.add(c);
     }
+
+    // ===== Геттеры / сеттеры =====
 
     public String getTitle() {
         return title;

@@ -1,0 +1,8 @@
+Транскрипт для: Beknur
+Оценки по курсам:
+[CSC1103] Programming Principles 1 (6 ECTS): 2,93
+[CSCI1102] Discrete Structures (5 ECTS): 0,10
+[CSCI1204] Programming Principles 2 (6 ECTS): 1,08
+[FUN1105] Physics 1 (5 ECTS): 2,07
+
+GPA: 1,59

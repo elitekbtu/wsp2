@@ -1,40 +1,36 @@
 import java.io.*;
 import java.util.*;
-
-// Подключаем ваши классы (оставьте свои импорты, как у вас в проекте):
 import news.NewsList;
 import users.UsersList;
 import users.employees.TechSupportOrder;
 import courses.CourseData.Data;
-
+import researcher.ResearchPaper;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 public class Tester {
     private static final String FILE_NAME = "user_data.txt";
 
-    /**
-     * Хранит данные в формате: login -> "пароль:тип"
-     * Пример: userDatabase.get("ivan") = "qwerty:Teacher"
-     */
+
     private static HashMap<String, String> userDatabase = new HashMap<>();
 
     private static Scanner scanner = new Scanner(System.in);
 
-    /**
-     * Флаг, определяющий, используем ли русский язык (true) или английский (false).
-     */
+
     private static boolean isRussian = false;
 
     public static void main(String[] args) {
-        chooseLanguage();    // Сначала даём выбрать язык
+        chooseLanguage();
         loadUserData();
 
         while (true) {
-            // Меню выбора действия (регистрация, вход, выход)
+
             System.out.println(isRussian
                     ? "\nВыберите действие: 1 - Регистрация, 2 - Вход, 0 - Выход"
                     : "\nChoose an action: 1 - Register, 2 - Login, 0 - Exit");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Очистка буфера
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -42,7 +38,7 @@ public class Tester {
                     break;
                 case 2:
                     if (loginUser()) {
-                        // Если логин успешен, попадаем в mainMenu(...)
+
                     }
                     break;
                 case 0:
@@ -50,14 +46,13 @@ public class Tester {
                     scanner.close();
                     return;
                 default:
-                    System.out.println(isRussian ? "Неверный выбор. Попробуйте снова." : "Invalid choice. Try again.");
+                    System.out.println(isRussian ? "Неверный выбор. Попробуйте снова."
+                            : "Invalid choice. Try again.");
             }
         }
     }
 
-    /**
-     * Метод выбора языка (1 - English, 2 - Russian).
-     */
+
     private static void chooseLanguage() {
         System.out.println("Choose language / Выберите язык:");
         System.out.println("1 - English");
@@ -66,9 +61,9 @@ public class Tester {
         int langChoice = scanner.nextInt();
         scanner.nextLine(); // очистка буфера
         if (langChoice == 2) {
-            isRussian = true;    // Русский
+            isRussian = true;
         } else {
-            isRussian = false;   // Английский (по умолчанию)
+            isRussian = false;
         }
     }
 
@@ -128,7 +123,8 @@ public class Tester {
         String registerLogin = scanner.nextLine();
 
         if (userDatabase.containsKey(registerLogin)) {
-            System.out.println(isRussian ? "Логин уже существует. Попробуйте другой." : "Login already exists. Try another.");
+            System.out.println(isRussian ? "Логин уже существует. Попробуйте другой."
+                    : "Login already exists. Try another.");
         } else {
             System.out.println(isRussian ? "Введите пароль:" : "Enter password:");
             String registerPassword = scanner.nextLine();
@@ -169,7 +165,7 @@ public class Tester {
             saveUserData();
 
             // Дополнительно вызываем UsersList для детальной регистрации (ID, fullname, email)
-            UsersList usersList = new UsersList(isRussian); // Передадим флаг языка в конструктор (если нужно)
+            UsersList usersList = new UsersList(isRussian);
             usersList.register();
 
             System.out.println(isRussian ? "Регистрация успешна!" : "Registration successful!");
@@ -195,20 +191,23 @@ public class Tester {
                     System.out.println(isRussian
                             ? "Вход выполнен успешно! Добро пожаловать, " + login + "!"
                             : "Login successful! Welcome, " + login + "!");
-                    mainMenu(userType);
+                    mainMenu(userType, login);  // <== передаём userLogin
                     return true;
                 }
             }
         }
 
-        System.out.println(isRussian ? "Ошибка входа. Проверьте логин и пароль." : "Login error. Check login and password.");
+        System.out.println(isRussian
+                ? "Ошибка входа. Проверьте логин и пароль."
+                : "Login error. Check login and password.");
         return false;
     }
 
     /**
      * Главное меню с учётом типа пользователя
+     * (Теперь принимаем и userLogin, чтобы знать, какие данные к кому относятся)
      */
-    private static void mainMenu(String userType) {
+    private static void mainMenu(String userType, String userLogin) {
         while (true) {
             System.out.println(isRussian
                     ? "\nГлавное меню:\n1 - Новостная лента\n2 - Данные пользователя\n3 - Сформировать и прочитать транскрипт\n4 - Курсы\n5 - Техническая поддержка\n6 - Выйти"
@@ -224,12 +223,23 @@ public class Tester {
             } else if ("TechSupportSpecialist".equalsIgnoreCase(userType)) {
                 System.out.println(isRussian ? "7 - Решить проблему пользователя" : "7 - Solve user issue");
             }
+            // Если это студент — добавим пункты 7 и 8:
+            // 7 - создать работу, 8 - прочитать (посмотреть) работы
+            else if ("Student".equalsIgnoreCase(userType)) {
+                System.out.println(isRussian
+                        ? "7 - Создать исследовательскую работу"
+                        : "7 - Create a research paper");
+                System.out.println(isRussian
+                        ? "8 - Просмотреть свои исследовательские работы"
+                        : "8 - View your research papers");
+            }
 
             int choice;
             try {
                 choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println(isRussian ? "Некорректный ввод. Попробуйте снова." : "Invalid input. Try again.");
+                System.out.println(isRussian ? "Некорректный ввод. Попробуйте снова."
+                        : "Invalid input. Try again.");
                 continue;
             }
 
@@ -261,6 +271,7 @@ public class Tester {
                     System.out.println(isRussian ? "Выход из меню." : "Exiting menu.");
                     return;
                 case 7:
+                    // Для Teacher, Manager, Admin, TechSupportSpecialist
                     if ("Teacher".equalsIgnoreCase(userType)) {
                         setGradeMenu();
                     } else if ("Manager".equalsIgnoreCase(userType)) {
@@ -269,6 +280,20 @@ public class Tester {
                         adminMenu();
                     } else if ("TechSupportSpecialist".equalsIgnoreCase(userType)) {
                         solveIssueMenu();
+                    }
+                    // Если студент — создать работу
+                    else if ("Student".equalsIgnoreCase(userType)) {
+                        createResearchPaperForStudent(userLogin);
+                    } else {
+                        System.out.println(isRussian
+                                ? "Недоступный пункт меню."
+                                : "Menu item not available.");
+                    }
+                    break;
+                case 8:
+                    // Этот пункт есть только у студента
+                    if ("Student".equalsIgnoreCase(userType)) {
+                        viewResearchPapersForStudent(userLogin);
                     } else {
                         System.out.println(isRussian
                                 ? "Недоступный пункт меню."
@@ -284,14 +309,157 @@ public class Tester {
     }
 
     /**
+     * Создать исследовательскую работу (ResearchPaper) студентом.
+     */
+    private static void createResearchPaperForStudent(String userLogin) {
+        System.out.println(isRussian ? "=== Создание исследовательской работы ==="
+                : "=== Create a Research Paper ===");
+
+        System.out.println(isRussian ? "Введите название (title):"
+                : "Enter title:");
+        String title = scanner.nextLine();
+
+        System.out.println(isRussian ? "Введите журнал/конференцию (journal):"
+                : "Enter journal/conference name:");
+        String journal = scanner.nextLine();
+
+        System.out.println(isRussian ? "Введите количество страниц (pages):"
+                : "Enter number of pages:");
+        int pages = 0;
+        try {
+            pages = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println(isRussian
+                    ? "Некорректное число страниц. Ставим 0."
+                    : "Invalid page number. Setting to 0.");
+        }
+
+        System.out.println(isRussian
+                ? "Введите DOI (например, 10.1234/abcd.2024.5678):"
+                : "Enter DOI (e.g. 10.1234/abcd.2024.5678):");
+        String doi = scanner.nextLine();
+
+        // Создаём новую работу
+        ResearchPaper paper = new ResearchPaper(
+                title,
+                journal,
+                pages,
+                new Date(),  // ставим текущую дату
+                doi
+        );
+
+        // Сохраняем в файл (например, userLogin_researchPapers.txt)
+        saveStudentResearchPaperToFile(userLogin, paper);
+
+        System.out.println(isRussian
+                ? "Исследовательская работа успешно создана!"
+                : "Research paper created successfully!");
+    }
+
+    /**
+     * Сохраняем данные о ResearchPaper в файл "login_researchPapers.txt"
+     * в режиме "append" (дозапись).
+     */
+    private static void saveStudentResearchPaperToFile(String userLogin, ResearchPaper paper) {
+        String fileName = userLogin + "_researchPapers.txt";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+            // Год в Date хранится с 1900, поэтому:
+            int pubYear = paper.getPublicationDate().getYear() + 1900;
+
+            // Формат хранения: title;journal;pages;year;doi
+            String line = String.format("%s;%s;%d;%d;%s",
+                    paper.getTitle(),
+                    paper.getJournal(),
+                    paper.getPages(),
+                    pubYear,
+                    paper.getDoi()
+            );
+
+            writer.write(line);
+            writer.newLine();
+
+        } catch (IOException e) {
+            System.out.println(isRussian
+                    ? "Ошибка при сохранении файла с исследованиями: " + e.getMessage()
+                    : "Error saving research papers file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * -------------- NEW --------------
+     * Прочитать (посмотреть) список созданных студентом работ.
+     */
+    private static void viewResearchPapersForStudent(String userLogin) {
+        String fileName = userLogin + "_researchPapers.txt";
+        File file = new File(fileName);
+        if (!file.exists()) {
+            System.out.println(isRussian
+                    ? "У вас ещё нет созданных работ."
+                    : "You haven't created any research papers yet.");
+            return;
+        }
+
+        // Считываем все работы из файла и выводим
+        System.out.println(isRussian
+                ? "=== Ваши исследовательские работы ==="
+                : "=== Your Research Papers ===");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            int counter = 1;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                // Формат: title;journal;pages;year;doi
+                String[] parts = line.split(";");
+                if (parts.length == 5) {
+                    String title = parts[0];
+                    String journal = parts[1];
+                    int pages = Integer.parseInt(parts[2]);
+                    int year = Integer.parseInt(parts[3]);
+                    String doi = parts[4];
+
+                    // Можно создать объект ResearchPaper, если нужно
+                    // Или просто вывести
+                    System.out.println(isRussian
+                            ? counter + ") Название: " + title
+                            + "\n   Журнал: " + journal
+                            + "\n   Страниц: " + pages
+                            + "\n   Год: " + year
+                            + "\n   DOI: " + doi + "\n"
+                            : counter + ") Title: " + title
+                            + "\n   Journal: " + journal
+                            + "\n   Pages: " + pages
+                            + "\n   Year: " + year
+                            + "\n   DOI: " + doi + "\n");
+                    counter++;
+                }
+            }
+
+            if (counter == 1) {
+                // Значит, не было данных (или все строки были пусты).
+                System.out.println(isRussian
+                        ? "Нет данных для отображения."
+                        : "No data to display.");
+            }
+
+        } catch (IOException e) {
+            System.out.println(isRussian
+                    ? "Ошибка чтения файла: " + e.getMessage()
+                    : "Error reading file: " + e.getMessage());
+        }
+    }
+
+    /**
      * Пример для Teacher
      */
     private static void setGradeMenu() {
-        System.out.println(isRussian ? "Введите ID студента для выставления оценки:" : "Enter student ID to set grade:");
+        System.out.println(isRussian ? "Введите ID студента для выставления оценки:"
+                : "Enter student ID to set grade:");
         String studentId = scanner.nextLine();
-        System.out.println(isRussian ? "Введите оценку (число):" : "Enter grade (number):");
+        System.out.println(isRussian ? "Введите оценку (число):"
+                : "Enter grade (number):");
         String grade = scanner.nextLine();
-        // Пример логики
         System.out.println(isRussian
                 ? "Учитель поставил студенту " + studentId + " оценку: " + grade
                 : "Teacher set grade " + grade + " for student " + studentId);
@@ -299,7 +467,6 @@ public class Tester {
 
     /**
      * Пример: Финансовый кабинет (Manager)
-     * Считает сумму обучения на основе ECTS * стоимость 1 кредита
      */
     private static void financeMenu() {
         System.out.println(isRussian
@@ -471,7 +638,6 @@ public class Tester {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) continue;
-                // [CSC1103] Programming Principles 1 (6 ECTS)
                 int credits;
                 try {
                     String ectsStr = line.replaceAll(".*\\((\\d+) ECTS\\).*", "$1");
@@ -644,7 +810,7 @@ public class Tester {
     }
 
     /**
-     * Меню технической поддержки (общий метод)
+     * Меню технической поддержки
      */
     private static void technicalSupport() {
         System.out.println(isRussian
@@ -688,9 +854,6 @@ public class Tester {
         }
     }
 
-    /**
-     * Создать запрос
-     */
     private static void createSupportRequest() {
         System.out.println(isRussian
                 ? "Введите описание вашего запроса:"
@@ -706,9 +869,6 @@ public class Tester {
                 : "Your request created with ID: " + orderId);
     }
 
-    /**
-     * Просмотреть все запросы
-     */
     private static void viewSupportRequests() {
         System.out.println(isRussian ? "Ваши запросы:" : "Your requests:");
         boolean hasRequests = false;
@@ -728,9 +888,6 @@ public class Tester {
         }
     }
 
-    /**
-     * Закрыть запрос
-     */
     private static void closeSupportRequest() {
         System.out.println(isRussian
                 ? "Введите ID запроса, который хотите закрыть:"
@@ -758,9 +915,6 @@ public class Tester {
         }
     }
 
-    /**
-     * Статус запроса
-     */
     private static String getOrderStatus(TechSupportOrder order) {
         if (order.isDone()) return isRussian ? "Завершён" : "Done";
         if (order.isAccepted()) return isRussian ? "Принят" : "Accepted";

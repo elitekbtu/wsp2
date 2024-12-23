@@ -6,16 +6,11 @@ import users.User;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The {@code ResearchProject} class represents a research project with a specific topic,
- * a list of published research papers, and a list of participating researchers.
- */
 
 public class ResearchProject {
     private String topic;
     private List<ResearchPaper> publishedPapers = new ArrayList<>();
     private List<Researcher> participants = new ArrayList<>();
-
 
     public ResearchProject() {
     }
@@ -30,12 +25,6 @@ public class ResearchProject {
         this.topic = topic;
     }
 
-    /**
-     * Adds a participant to the list of researchers associated with the research project.
-     *
-     * @param participant The user to be added as a participant.
-     * @throws NonResearcherException If the participant is not an instance of the Researcher class.
-     */
 
     public void addParticipants(User participant) throws NonResearcherException {
         if (participant instanceof Researcher){
@@ -46,6 +35,7 @@ public class ResearchProject {
         }
     }
 
+    // ===== Геттеры / сеттеры =====
 
     public String getTopic() {
         return topic;

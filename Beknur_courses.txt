@@ -1,0 +1,4 @@
+[CSC1103] Programming Principles 1 (6 ECTS)
+[CSCI1102] Discrete Structures (5 ECTS)
+[CSCI1204] Programming Principles 2 (6 ECTS)
+[FUN1105] Physics 1 (5 ECTS)

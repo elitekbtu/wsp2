@@ -15,25 +15,18 @@ public class UsersList {
     private Scanner scanner;
     private boolean isRussian;
 
-    /**
-     * Конструктор, принимающий флаг языка (true = русский, false = английский).
-     */
+
     public UsersList(boolean isRussian) {
         this.scanner = new Scanner(System.in);
         this.isRussian = isRussian;
     }
 
-    /**
-     * Если в вашем проекте где-то по умолчанию вызывается UsersList без флага,
-     * можно завести ещё один конструктор по умолчанию:
-     */
+
     public UsersList() {
-        this(false); // По умолчанию - английский, или на ваш выбор
+        this(false);
     }
 
-    /**
-     * Запуск процесса регистрации: выбор типа пользователя
-     */
+
     public void register() {
         System.out.println(isRussian
                 ? "Добро пожаловать в регистрацию"
@@ -105,7 +98,7 @@ public class UsersList {
         System.out.println(isRussian ? "Введите пароль учителя:" : "Enter teacher's password:");
         String password = scanner.nextLine();
 
-        // Допустим, у учителя есть поле "department"
+        // Предположим, у учителя есть поле "department"
         Teacher teacher = new Teacher(id, fullname, email, password, "Department");
         saveUserData(teacher);
 
@@ -207,9 +200,7 @@ public class UsersList {
 
         // Создаём папку, если не существует
         if (!directory.exists()) {
-            if (directory.mkdirs()) {
-                // Можно вывести сообщение, но только если нужно
-            } else {
+            if (!directory.mkdirs()) {
                 System.out.println(isRussian
                         ? "Ошибка создания директории: " + directoryPath
                         : "Failed to create directory: " + directoryPath);
@@ -249,10 +240,8 @@ public class UsersList {
         scanner.nextLine();
 
         File file = null;
-
         switch (choice) {
             case 1:
-                // У вас может быть так, что студент всегда "UndergraduateStudent"
                 file = new File("users/UsersData/UndergraduateStudent/" + id + ".txt");
                 break;
             case 2:

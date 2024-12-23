@@ -1,0 +1,13 @@
+Транскрипт для: Turarbek
+Оценки по курсам:
+[CSC1103] Programming Principles 1 (6 ECTS): 0,33
+[CSCI1102] Discrete Structures (5 ECTS): 0,63
+[LAN1180] English 1 (10 ECTS): 0,34
+[CSCI1204] Programming Principles 2 (6 ECTS): 3,28
+[FUN1105] Physics 1 (5 ECTS): 1,50
+[CSCI2104] Databases (5 ECTS): 0,36
+[CSCI2105] Algorithms and Data Structures (5 ECTS): 2,13
+[CSCI2106] Object-Oriented Programming (5 ECTS): 3,79
+[PHE101] Physical Education 1 (4 ECTS): 3,59
+
+GPA: 1,60

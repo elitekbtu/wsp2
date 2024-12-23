@@ -6,7 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="2559870d-cac6-4ec9-91cc-7d88101c222c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/res/Tester.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/res/researcher/ResearchPaper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/res/researcher/ResearchPaper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/res/researcher/ResearchProject.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/res/researcher/ResearchProject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/res/researcher/Researcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/res/researcher/Researcher.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/res/users/UsersList.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/res/users/UsersList.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Tester.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tester.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/news/News.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/news/News.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/researcher/ResearchPaper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/researcher/ResearchPaper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/researcher/ResearchProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/researcher/ResearchProject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/researcher/Researcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/researcher/Researcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/UsersList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/UsersList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/employees/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/employees/Employee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/employees/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/employees/Manager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +48,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -55,7 +68,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734898794142</updated>
-      <workItem from="1734898795978" duration="6558000" />
+      <workItem from="1734898795978" duration="10351000" />
     </task>
     <servers />
   </component>

@@ -11,16 +11,12 @@ public abstract class Employee extends User {
         super(id, fullname);
         this.department = department;
     }
-
     public Employee(String id, String fullname, String email, String password, String department) {
         super(id, fullname, email, password);
         this.department = department;
     }
-
     public Employee() {
-
     }
-
     public String getDepartment() {
         return department;
     }
